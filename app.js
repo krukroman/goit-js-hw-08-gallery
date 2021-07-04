@@ -91,6 +91,10 @@ const makeGalleryItemEl = galleryItems.map(makeGalleryItemMarkup).join('');
 galleryListRef.insertAdjacentHTML('beforeend', makeGalleryItemEl);
 // =============END Markup================
 
+// ================Базовий функціонал=====================
+// 1. відкриття модалки по кліку на зображення
+// 2. рендер оригінального зображення в модалці
+// 3. закриття модалки по кліку на бекдроп, по кліку на кнопку "закрити" та при нажатті на клавіщу Escape
 galleryListRef.addEventListener('click', openModal);
 
 function setSrc(e) {
@@ -143,3 +147,4 @@ function closeModal(e) {
 
   modalWindow.classList.remove('is-open');
 }
+// ==========================END Базофий фунціонал=====================
