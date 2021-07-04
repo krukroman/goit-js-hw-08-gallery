@@ -63,3 +63,30 @@ const galleryItems = [
     description: 'Lighthouse Coast Sea',
   },
 ];
+
+// --------- робим розмітку----------
+const galleryListRef = document.querySelector('.js-gallery');
+
+const makeGalleryItemMarkup = ({ preview, original, description }) => {
+  return `
+    <li class="gallery__item">
+      <a
+        class="gallery__link"
+        href="${original}"
+      >
+        <img
+          class="gallery__image"
+          src="${preview}"
+          data-source="${original}"
+          alt="${description}"          
+        />
+      </a>
+    </li>
+  `;
+};
+
+const makeGalleryItemEl = galleryItems.map(makeGalleryItemMarkup).join('');
+
+galleryListRef.insertAdjacentHTML('beforeend', makeGalleryItemEl);
+
+// делегування і отримання посилання на оригінальне зображення
