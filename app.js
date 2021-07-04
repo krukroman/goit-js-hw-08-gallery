@@ -97,11 +97,11 @@ galleryListRef.insertAdjacentHTML('beforeend', makeGalleryItemEl);
 // 3. закриття модалки по кліку на бекдроп, по кліку на кнопку "закрити" та при нажатті на клавіщу Escape
 galleryListRef.addEventListener('click', openModal);
 
-function setSrc(e) {
+function setSrc(event) {
   modalWindow.querySelector(
     '.lightbox__image',
-  ).src = `${e.target.dataset.source}`;
-  modalWindow.querySelector('.lightbox__image').alt = `${e.target.alt}`;
+  ).src = `${event.target.dataset.source}`;
+  modalWindow.querySelector('.lightbox__image').alt = `${event.target.alt}`;
 }
 
 function clearSrc() {
@@ -119,24 +119,24 @@ function removeEventListeners() {
   window.removeEventListener('keydown', closeModal);
 }
 
-function openModal(e) {
-  e.preventDefault();
-  if (e.target.nodeName !== 'IMG') {
+function openModal(event) {
+  event.preventDefault();
+  if (event.target.nodeName !== 'IMG') {
     return;
   }
 
   modalWindow.classList.add('is-open');
 
-  setSrc(e);
+  setSrc(event);
 
   setEventListeners();
 }
 
-function closeModal(e) {
+function closeModal(event) {
   if (
-    e.target.classList.value !== 'lightbox__overlay' &&
-    e.target.classList.value !== 'lightbox__button' &&
-    e.code !== 'Escape'
+    event.target.classList.value !== 'lightbox__overlay' &&
+    event.target.classList.value !== 'lightbox__button' &&
+    event.code !== 'Escape'
   ) {
     return;
   }
