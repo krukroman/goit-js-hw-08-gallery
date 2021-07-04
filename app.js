@@ -66,10 +66,20 @@ const galleryItems = [
 
 const galleryListRef = document.querySelector('.js-gallery');
 const modalWindow = document.querySelector('.js-lightbox');
+const galleryMarkup = makeGalleryMarkup(galleryItems);
+galleryListRef.insertAdjacentHTML('beforeend', galleryMarkup);
+const imagesCollection = [
+  ...galleryListRef.querySelectorAll('.gallery__image'),
+];
+let index = 0;
+
+galleryListRef.addEventListener('click', openModal);
 
 // =============Markup================
-const makeGalleryItemMarkup = ({ preview, original, description }) => {
-  return `
+function makeGalleryMarkup(galleryItems) {
+  return galleryItems
+    .map(({ preview, original, description }) => {
+      return `
     <li class="gallery__item">
       <a
         class="gallery__link"
@@ -84,50 +94,22 @@ const makeGalleryItemMarkup = ({ preview, original, description }) => {
       </a>
     </li>
   `;
-};
-
-const makeGalleryItemEl = galleryItems.map(makeGalleryItemMarkup).join('');
-
-galleryListRef.insertAdjacentHTML('beforeend', makeGalleryItemEl);
+    })
+    .join('');
+}
 // =============END Markup================
-
-// ================Базовий функціонал=====================
-// 1. відкриття модалки по кліку на зображення
-// 2. рендер оригінального зображення в модалці
-// 3. закриття модалки по кліку на бекдроп, по кліку на кнопку "закрити" та при нажатті на клавіщу Escape
-galleryListRef.addEventListener('click', openModal);
-
-function setSrc(event) {
-  modalWindow.querySelector(
-    '.lightbox__image',
-  ).src = `${event.target.dataset.source}`;
-  modalWindow.querySelector('.lightbox__image').alt = `${event.target.alt}`;
-}
-
-function clearSrc() {
-  modalWindow.querySelector('.lightbox__image').src = '';
-  modalWindow.querySelector('.lightbox__image').alt = '';
-}
-
-function setEventListeners() {
-  modalWindow.addEventListener('click', closeModal);
-  window.addEventListener('keydown', closeModal);
-}
-
-function removeEventListeners() {
-  modalWindow.removeEventListener('clock', closeModal);
-  window.removeEventListener('keydown', closeModal);
-}
 
 function openModal(event) {
   event.preventDefault();
-  if (event.target.nodeName !== 'IMG') {
+  if (!event.target.classList.contains('gallery__image')) {
     return;
   }
 
   modalWindow.classList.add('is-open');
 
   setSrc(event);
+
+  index = getCurrentIndex(event);
 
   setEventListeners();
 }
@@ -147,4 +129,61 @@ function closeModal(event) {
 
   modalWindow.classList.remove('is-open');
 }
-// ==========================END Базофий фунціонал=====================
+
+function setSrc(event) {
+  modalWindow.querySelector(
+    '.lightbox__image',
+  ).src = `${event.target.dataset.source}`;
+  modalWindow.querySelector('.lightbox__image').alt = `${event.target.alt}`;
+}
+
+function getCurrentIndex(event) {
+  return imagesCollection.indexOf(event.target);
+}
+
+function changeSrc(index) {
+  modalWindow.querySelector(
+    '.lightbox__image',
+  ).src = `${imagesCollection[index].dataset.source}`;
+  modalWindow.querySelector(
+    '.lightbox__image',
+  ).alt = `${imagesCollection[index].alt}`;
+}
+function clearSrc() {
+  modalWindow.querySelector('.lightbox__image').src = '';
+  modalWindow.querySelector('.lightbox__image').alt = '';
+}
+
+function setEventListeners() {
+  modalWindow.addEventListener('click', closeModal);
+  window.addEventListener('keydown', closeModal);
+  window.addEventListener('keydown', nextImage);
+  window.addEventListener('keydown', prevImage);
+}
+
+function removeEventListeners() {
+  modalWindow.removeEventListener('clock', closeModal);
+  window.removeEventListener('keydown', closeModal);
+  window.removeEventListener('keydown', nextImage);
+  window.removeEventListener('keydown', prevImage);
+}
+
+function nextImage(event) {
+  if (event.code !== 'ArrowRight') {
+    return;
+  }
+  index += 1;
+  index > imagesCollection.length - 1 && (index = 0);
+
+  changeSrc(index);
+}
+
+function prevImage(event) {
+  if (event.code !== 'ArrowLeft') {
+    return;
+  }
+  index -= 1;
+  index < 0 && (index = imagesCollection.length - 1);
+
+  changeSrc(index);
+}
