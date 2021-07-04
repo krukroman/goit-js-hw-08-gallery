@@ -64,9 +64,10 @@ const galleryItems = [
   },
 ];
 
-// --------- робим розмітку----------
 const galleryListRef = document.querySelector('.js-gallery');
+const modalWindow = document.querySelector('.js-lightbox');
 
+// =============Markup================
 const makeGalleryItemMarkup = ({ preview, original, description }) => {
   return `
     <li class="gallery__item">
@@ -88,5 +89,57 @@ const makeGalleryItemMarkup = ({ preview, original, description }) => {
 const makeGalleryItemEl = galleryItems.map(makeGalleryItemMarkup).join('');
 
 galleryListRef.insertAdjacentHTML('beforeend', makeGalleryItemEl);
+// =============END Markup================
 
-// делегування і отримання посилання на оригінальне зображення
+galleryListRef.addEventListener('click', openModal);
+
+function setSrc(e) {
+  modalWindow.querySelector(
+    '.lightbox__image',
+  ).src = `${e.target.dataset.source}`;
+  modalWindow.querySelector('.lightbox__image').alt = `${e.target.alt}`;
+}
+
+function clearSrc() {
+  modalWindow.querySelector('.lightbox__image').src = '';
+  modalWindow.querySelector('.lightbox__image').alt = '';
+}
+
+function setEventListeners() {
+  modalWindow.addEventListener('click', closeModal);
+  window.addEventListener('keydown', closeModal);
+}
+
+function removeEventListeners() {
+  modalWindow.removeEventListener('clock', closeModal);
+  window.removeEventListener('keydown', closeModal);
+}
+
+function openModal(e) {
+  e.preventDefault();
+  if (e.target.nodeName !== 'IMG') {
+    return;
+  }
+
+  modalWindow.classList.add('is-open');
+
+  setSrc(e);
+
+  setEventListeners();
+}
+
+function closeModal(e) {
+  if (
+    e.target.classList.value !== 'lightbox__overlay' &&
+    e.target.classList.value !== 'lightbox__button' &&
+    e.code !== 'Escape'
+  ) {
+    return;
+  }
+
+  clearSrc();
+
+  removeEventListeners();
+
+  modalWindow.classList.remove('is-open');
+}
