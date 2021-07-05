@@ -65,10 +65,11 @@ const galleryItems = [
 ];
 
 const galleryListRef = document.querySelector('.js-gallery');
-const modalWindow = document.querySelector('.js-lightbox');
+const modalWindowRef = document.querySelector('.js-lightbox');
+const lightBoxImageRef = modalWindowRef.querySelector('.lightbox__image');
 const galleryMarkup = makeGalleryMarkup(galleryItems);
 galleryListRef.insertAdjacentHTML('beforeend', galleryMarkup);
-const imagesCollection = [
+const imagesCollectionRef = [
   ...galleryListRef.querySelectorAll('.gallery__image'),
 ];
 let index = 0;
@@ -105,7 +106,7 @@ function openModal(event) {
     return;
   }
 
-  modalWindow.classList.add('is-open');
+  modalWindowRef.classList.add('is-open');
 
   setSrc(event);
 
@@ -127,42 +128,36 @@ function closeModal(event) {
 
   removeEventListeners();
 
-  modalWindow.classList.remove('is-open');
+  modalWindowRef.classList.remove('is-open');
 }
 
 function setSrc(event) {
-  modalWindow.querySelector(
-    '.lightbox__image',
-  ).src = `${event.target.dataset.source}`;
-  modalWindow.querySelector('.lightbox__image').alt = `${event.target.alt}`;
+  lightBoxImageRef.src = `${event.target.dataset.source}`;
+  lightBoxImageRef.alt = `${event.target.alt}`;
 }
 
 function getCurrentIndex(event) {
-  return imagesCollection.indexOf(event.target);
+  return imagesCollectionRef.indexOf(event.target);
 }
 
 function changeSrc(index) {
-  modalWindow.querySelector(
-    '.lightbox__image',
-  ).src = `${imagesCollection[index].dataset.source}`;
-  modalWindow.querySelector(
-    '.lightbox__image',
-  ).alt = `${imagesCollection[index].alt}`;
+  lightBoxImageRef.src = `${imagesCollectionRef[index].dataset.source}`;
+  lightBoxImageRef.alt = `${imagesCollectionRef[index].alt}`;
 }
 function clearSrc() {
-  modalWindow.querySelector('.lightbox__image').src = '';
-  modalWindow.querySelector('.lightbox__image').alt = '';
+  lightBoxImageRef.src = '';
+  lightBoxImageRef.alt = '';
 }
 
 function setEventListeners() {
-  modalWindow.addEventListener('click', closeModal);
+  modalWindowRef.addEventListener('click', closeModal);
   window.addEventListener('keydown', closeModal);
   window.addEventListener('keydown', nextImage);
   window.addEventListener('keydown', prevImage);
 }
 
 function removeEventListeners() {
-  modalWindow.removeEventListener('clock', closeModal);
+  modalWindowRef.removeEventListener('clock', closeModal);
   window.removeEventListener('keydown', closeModal);
   window.removeEventListener('keydown', nextImage);
   window.removeEventListener('keydown', prevImage);
@@ -173,7 +168,7 @@ function nextImage(event) {
     return;
   }
   index += 1;
-  index > imagesCollection.length - 1 && (index = 0);
+  index > imagesCollectionRef.length - 1 && (index = 0);
 
   changeSrc(index);
 }
@@ -183,7 +178,7 @@ function prevImage(event) {
     return;
   }
   index -= 1;
-  index < 0 && (index = imagesCollection.length - 1);
+  index < 0 && (index = imagesCollectionRef.length - 1);
 
   changeSrc(index);
 }
