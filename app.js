@@ -157,7 +157,7 @@ function setEventListeners() {
 }
 
 function removeEventListeners() {
-  modalWindowRef.removeEventListener('clock', closeModal);
+  modalWindowRef.removeEventListener('click', closeModal);
   window.removeEventListener('keydown', closeModal);
   window.removeEventListener('keydown', nextImage);
   window.removeEventListener('keydown', prevImage);
